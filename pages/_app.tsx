@@ -1,6 +1,29 @@
-import '../styles/globals.css'
-import type { AppProps } from 'next/app'
+import { Inter } from "@next/font/google";
+import type { AppProps } from "next/app";
+import {
+  Hydrate,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
+import { useState } from "react";
+
+import "../styles/globals.css";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+});
 
 export default function App({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+  const [queryClient] = useState(() => new QueryClient());
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Hydrate state={pageProps.dehydratedState}>
+        <main className={`${inter.variable} font-sans`}>
+          <Component {...pageProps} />
+        </main>
+      </Hydrate>
+    </QueryClientProvider>
+  );
 }
